@@ -1,1 +1,1 @@
-"# OOP - Vu Hieu Minh" 
+OOP - Vu Hieu Minh
