@@ -226,23 +226,15 @@ void SystemInterface::runMenu()
         {
             int ma;
             char kt;
-            cout << "Ma bai: ";
-            cin >> ma;
-            if (co1 && bai1.lay_ma() == ma)
+            do
             {
-                cout << "bai nay da ton tai";
-                break;
-            }
-            else if (co2 && bai2.lay_ma() == ma)
-            {
-                cout << "bai nay da ton tai";
-                break;
-            }
-            else if (co3 && bai3.lay_ma() == ma)
-            {
-                cout << "bai nay da ton tai";
-                break;
-            }
+                cout << "Ma bai: ";
+                cin >> ma;
+                if (co1 && bai1.lay_ma() == ma || co2 && bai2.lay_ma() == ma || co3 && bai3.lay_ma() == ma)
+                {
+                    cout << "bai nay da ton tai" << endl;
+                }
+            } while (co1 && bai1.lay_ma() == ma || co2 && bai2.lay_ma() == ma || co3 && bai3.lay_ma() == ma);
             cout << "Kich thuoc (S/M/L): ";
             cin >> kt;
             kt = toupper(kt);
@@ -283,48 +275,55 @@ void SystemInterface::runMenu()
         }
         case (2):
         {
+            if (co1 == false && co2 == false && co3 == false)
+            {
+                cout << "chua co bai do xe nao" << endl;
+                break;
+            }
             int ma, gio, tg;
             string loai;
-            cout << "Ma xe: ";
-            cin >> ma;
-            if (ma > 0)
+            do
             {
-                if ((co1 && bai1.chua(ma)) || (co2 && bai2.chua(ma)) || (co3 && bai3.chua(ma)))
+                cout << "Ma xe: ";
+                cin >> ma;
+                if (ma > 0)
                 {
-                    cout << "Ma xe nay da ton tai" << endl;
-                    break;
+                    if ((co1 && bai1.chua(ma)) || (co2 && bai2.chua(ma)) || (co3 && bai3.chua(ma)))
+                    {
+                        cout << "Ma xe nay da ton tai" << endl;
+                    }
                 }
-            }
-            else {
-                cout << "ma xe phai lon hon 0" << endl;
-                break;
-            }
-            cout << "Loai (Car/Motorcycle/Bicycle): ";
-            cin >> loai;
-            if (loai == "Car")
-                ;
-            else if (loai == "Motorcycle")
-                ;
-            else if (loai == "Bicycle")
-                ;
-            else
+                else
+                {
+                    cout << "ma xe phai lon hon 0" << endl;
+                }
+            } while (ma <= 0 || ((co1 && bai1.chua(ma)) == true || (co2 && bai2.chua(ma)) == true || (co3 && bai3.chua(ma)) == true));
+            do
             {
-                cout << "loai xe khong ton tai" << endl;
-                break;
-            }
-            do {
-            cout << "Gio vao (0-23): ";
-            cin >> gio;
-            if (gio < 0 || gio > 23) {
-                cout << "gio vao phai tu 0h-23h" << endl;
-            }
+                cout << "Loai (Car/Motorcycle/Bicycle): ";
+                cin >> loai;
+                if (loai != "Car" && loai != "Motorcycle" && loai != "Bicycle")
+                {
+                    cout << "loai xe khong ton tai" << endl;
+                }
+            } while (loai != "Car" && loai != "Motorcycle" && loai != "Bicycle");
+            do
+            {
+                cout << "Gio vao (0-23): ";
+                cin >> gio;
+                if (gio < 0 || gio > 23)
+                {
+                    cout << "gio vao phai tu 0h-23h" << endl;
+                }
             } while (gio < 0 || gio > 23);
-            do{
-            cout << "Thoi luong (1-23): ";
-            cin >> tg;
-            if (tg < 1 || tg > 23) {
-                cout << "thoi gian do hop le la 1h-23h" << endl;
-            }
+            do
+            {
+                cout << "Thoi luong (1-23): ";
+                cin >> tg;
+                if (tg < 1 || tg > 23)
+                {
+                    cout << "thoi gian do hop le la 1h-23h" << endl;
+                }
             } while (tg < 1 || tg > 23);
             phuong_tien v(ma, loai, gio, tg);
             bool ok = false;
@@ -342,6 +341,12 @@ void SystemInterface::runMenu()
         }
         case (3):
         {
+            if (co1 == false && co2 == false && co3 == false)
+            {
+                cout << "chua co bai do xe nao" << endl;
+                break;
+            }
+            
             int ma;
             cout << "Ma bai can xoa: ";
             cin >> ma;
