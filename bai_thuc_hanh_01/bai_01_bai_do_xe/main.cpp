@@ -58,7 +58,7 @@ private:
     int ma_bai;
     char kich_thuoc;
     phuong_tien pt1, pt2, pt3; // sau này dùng mảng
-    bool co1, co2, co3;
+    bool co_xe1, co_xe2, co_xe3;
 
 public:
     bai_xe();
@@ -70,11 +70,13 @@ public:
     bool chua(int ma_xe) const;
     void hien_thi() const;
     bool co_loai(string loai, int &dem, double &tong) const;
+    bool trong() const;
+    void hien_thi_loai(const string &loai) const;
 };
 
-bai_xe::bai_xe() : ma_bai(0), kich_thuoc('S'), co1(false), co2(false), co3(false) {}
+bai_xe::bai_xe() : ma_bai(0), kich_thuoc('S'), co_xe1(false), co_xe2(false), co_xe3(false) {}
 
-bai_xe::bai_xe(int ma, char kt) : ma_bai(ma), kich_thuoc(kt), co1(false), co2(false), co3(false) {}
+bai_xe::bai_xe(int ma, char kt) : ma_bai(ma), kich_thuoc(kt), co_xe1(false), co_xe2(false), co_xe3(false) {}
 
 int bai_xe::lay_ma() const { return ma_bai; }
 
@@ -82,60 +84,69 @@ bool bai_xe::them(phuong_tien v)
 {
     int cap = (kich_thuoc == 'S') ? 1 : (kich_thuoc == 'M') ? 2
                                                             : 3;
-    if (cap >= 1 && !co1)
+    if (cap >= 1 && !co_xe1)
     {
         pt1 = v;
-        co1 = true;
+        co_xe1 = true;
         return true;
     }
-    if (cap >= 2 && !co2)
+    if (cap >= 2 && !co_xe2)
     {
         pt2 = v;
-        co2 = true;
+        co_xe2 = true;
         return true;
     }
-    if (cap >= 3 && !co3)
+    if (cap >= 3 && !co_xe3)
     {
         pt3 = v;
-        co3 = true;
+        co_xe3 = true;
         return true;
     }
     return false;
 }
+bool bai_xe::trong() const
+{
+    return !co_xe1 && !co_xe2 && !co_xe3;
+}
+void bai_xe::hien_thi_loai(const string &loai) const {
+    if (co_xe1 && pt1.lay_loai_xe() == loai) pt1.hien_thi();
+    if (co_xe2 && pt2.lay_loai_xe() == loai) pt2.hien_thi();
+    if (co_xe3 && pt3.lay_loai_xe() == loai) pt3.hien_thi();
+}
 
 bool bai_xe::xoa(int ma_xe)
 {
-    if (co1 && pt1.lay_ma_xe() == ma_xe)
+    if (co_xe1 && pt1.lay_ma_xe() == ma_xe)
     {
-        if (co2)
+        if (co_xe2)
         {
             pt1 = pt2;
-            if (co3)
+            if (co_xe3)
             {
                 pt2 = pt3;
-                co3 = false;
+                co_xe3 = false;
             }
             else
-                co2 = false;
+                co_xe2 = false;
         }
         else
-            co1 = false;
+            co_xe1 = false;
         return true;
     }
-    if (co2 && pt2.lay_ma_xe() == ma_xe)
+    if (co_xe2 && pt2.lay_ma_xe() == ma_xe)
     {
-        if (co3)
+        if (co_xe3)
         {
             pt2 = pt3;
-            co3 = false;
+            co_xe3 = false;
         }
         else
-            co2 = false;
+            co_xe2 = false;
         return true;
     }
-    if (co3 && pt3.lay_ma_xe() == ma_xe)
+    if (co_xe3 && pt3.lay_ma_xe() == ma_xe)
     {
-        co3 = false;
+        co_xe3 = false;
         return true;
     }
     return false;
@@ -143,11 +154,11 @@ bool bai_xe::xoa(int ma_xe)
 
 bool bai_xe::chua(int ma_xe) const
 {
-    if (co1 && pt1.lay_ma_xe() == ma_xe)
+    if (co_xe1 && pt1.lay_ma_xe() == ma_xe)
         return true;
-    if (co2 && pt2.lay_ma_xe() == ma_xe)
+    if (co_xe2 && pt2.lay_ma_xe() == ma_xe)
         return true;
-    if (co3 && pt3.lay_ma_xe() == ma_xe)
+    if (co_xe3 && pt3.lay_ma_xe() == ma_xe)
         return true;
     return false;
 }
@@ -156,14 +167,14 @@ void bai_xe::hien_thi() const
 {
     int cap = (kich_thuoc == 'S') ? 1 : (kich_thuoc == 'M') ? 2
                                                             : 3;
-    int so_xe = co1 + co2 + co3;
+    int so_xe = co_xe1 + co_xe2 + co_xe3;
     cout << "Bai " << ma_bai << " [" << kich_thuoc << "] "
          << so_xe << "/" << cap << " xe\n";
-    if (co1)
+    if (co_xe1)
         pt1.hien_thi();
-    if (co2)
+    if (co_xe2)
         pt2.hien_thi();
-    if (co3)
+    if (co_xe3)
         pt3.hien_thi();
 }
 
@@ -171,17 +182,17 @@ bool bai_xe::co_loai(string loai, int &dem, double &tong) const
 {
     dem = 0;
     tong = 0;
-    if (co1 && pt1.lay_loai_xe() == loai)
+    if (co_xe1 && pt1.lay_loai_xe() == loai)
     {
         ++dem;
         tong += pt1.tinh_phi();
     }
-    if (co2 && pt2.lay_loai_xe() == loai)
+    if (co_xe2 && pt2.lay_loai_xe() == loai)
     {
         ++dem;
         tong += pt2.tinh_phi();
     }
-    if (co3 && pt3.lay_loai_xe() == loai)
+    if (co_xe3 && pt3.lay_loai_xe() == loai)
     {
         ++dem;
         tong += pt3.tinh_phi();
@@ -193,14 +204,14 @@ class SystemInterface
 {
 private:
     bai_xe bai1, bai2, bai3; // sau này dùng mảng
-    bool co1, co2, co3;
+    bool co_bai1, co_bai2, co_bai3;
 
 public:
     SystemInterface();
     void runMenu();
 };
 
-SystemInterface::SystemInterface() : co1(false), co2(false), co3(false) {}
+SystemInterface::SystemInterface() : co_bai1(false), co_bai2(false), co_bai3(false) {}
 
 void SystemInterface::runMenu()
 {
@@ -230,11 +241,11 @@ void SystemInterface::runMenu()
             {
                 cout << "Ma bai: ";
                 cin >> ma;
-                if (co1 && bai1.lay_ma() == ma || co2 && bai2.lay_ma() == ma || co3 && bai3.lay_ma() == ma)
+                if (co_bai1 && bai1.lay_ma() == ma || co_bai2 && bai2.lay_ma() == ma || co_bai3 && bai3.lay_ma() == ma)
                 {
                     cout << "bai nay da ton tai" << endl;
                 }
-            } while (co1 && bai1.lay_ma() == ma || co2 && bai2.lay_ma() == ma || co3 && bai3.lay_ma() == ma);
+            } while (co_bai1 && bai1.lay_ma() == ma || co_bai2 && bai2.lay_ma() == ma || co_bai3 && bai3.lay_ma() == ma);
             cout << "Kich thuoc (S/M/L): ";
             cin >> kt;
             kt = toupper(kt);
@@ -249,22 +260,22 @@ void SystemInterface::runMenu()
                 cout << "Kich thuoc khong ton tai" << endl;
                 break;
             }
-            if (!co1)
+            if (!co_bai1)
             {
                 bai1 = bai_xe(ma, kt);
-                co1 = true;
+                co_bai1 = true;
                 cout << "Da tao bai " << ma << "\n";
             }
-            else if (!co2)
+            else if (!co_bai2)
             {
                 bai2 = bai_xe(ma, kt);
-                co2 = true;
+                co_bai2 = true;
                 cout << "Da tao bai " << ma << "\n";
             }
-            else if (!co3)
+            else if (!co_bai3)
             {
                 bai3 = bai_xe(ma, kt);
-                co3 = true;
+                co_bai3 = true;
                 cout << "Da tao bai " << ma << "\n";
             }
             else
@@ -275,7 +286,7 @@ void SystemInterface::runMenu()
         }
         case (2):
         {
-            if (co1 == false && co2 == false && co3 == false)
+            if (co_bai1 == false && co_bai2 == false && co_bai3 == false)
             {
                 cout << "chua co bai do xe nao" << endl;
                 break;
@@ -288,7 +299,7 @@ void SystemInterface::runMenu()
                 cin >> ma;
                 if (ma > 0)
                 {
-                    if ((co1 && bai1.chua(ma)) || (co2 && bai2.chua(ma)) || (co3 && bai3.chua(ma)))
+                    if ((co_bai1 && bai1.chua(ma)) || (co_bai2 && bai2.chua(ma)) || (co_bai3 && bai3.chua(ma)))
                     {
                         cout << "Ma xe nay da ton tai" << endl;
                     }
@@ -297,7 +308,7 @@ void SystemInterface::runMenu()
                 {
                     cout << "ma xe phai lon hon 0" << endl;
                 }
-            } while (ma <= 0 || ((co1 && bai1.chua(ma)) == true || (co2 && bai2.chua(ma)) == true || (co3 && bai3.chua(ma)) == true));
+            } while (ma <= 0 || ((co_bai1 && bai1.chua(ma)) == true || (co_bai2 && bai2.chua(ma)) == true || (co_bai3 && bai3.chua(ma)) == true));
             do
             {
                 cout << "Loai (Car/Motorcycle/Bicycle): ";
@@ -327,11 +338,11 @@ void SystemInterface::runMenu()
             } while (tg < 1 || tg > 23);
             phuong_tien v(ma, loai, gio, tg);
             bool ok = false;
-            if (co1 && !ok)
+            if (co_bai1 && !ok)
                 ok = bai1.them(v);
-            if (co2 && !ok)
+            if (co_bai2 && !ok)
                 ok = bai2.them(v);
-            if (co3 && !ok)
+            if (co_bai3 && !ok)
                 ok = bai3.them(v);
             if (ok)
                 cout << "Da them xe " << ma << " | Phi: $" << fixed << setprecision(2) << v.tinh_phi() << "\n";
@@ -341,58 +352,62 @@ void SystemInterface::runMenu()
         }
         case (3):
         {
-            if (co1 == false && co2 == false && co3 == false)
+            if (co_bai1 == false && co_bai2 == false && co_bai3 == false)
             {
                 cout << "chua co bai do xe nao" << endl;
                 break;
             }
-            
             int ma;
             cout << "Ma bai can xoa: ";
             cin >> ma;
-            if (co1 && bai1.lay_ma() == ma)
+            if ((co_bai1 && !bai1.trong() && bai1.lay_ma() == ma) || (co_bai2 && !bai2.trong() && bai2.lay_ma() == ma) || (co_bai3 && !bai3.trong() && bai3.lay_ma() == ma))
             {
-                if (co2)
+                cout << "bai nay dang co xe do, khong the xoa" << endl;
+                break;
+            }
+            if (co_bai1 && bai1.lay_ma() == ma)
+            {
+                if (co_bai2)
                 {
                     bai1 = bai2;
-                    if (co3)
+                    if (co_bai3)
                     {
                         bai2 = bai3;
                         bai3 = bai_xe();
-                        co3 = false;
+                        co_bai3 = false;
                     }
                     else
                     {
                         bai2 = bai_xe();
-                        co2 = false;
+                        co_bai2 = false;
                     }
                 }
                 else
                 {
                     bai1 = bai_xe();
-                    co1 = false;
+                    co_bai1 = false;
                 }
                 cout << "Da xoa bai " << ma << "\n";
             }
-            else if (co2 && bai2.lay_ma() == ma)
+            else if (co_bai2 && bai2.lay_ma() == ma)
             {
-                if (co3)
+                if (co_bai3)
                 {
                     bai2 = bai3;
                     bai3 = bai_xe();
-                    co3 = false;
+                    co_bai3 = false;
                 }
                 else
                 {
                     bai2 = bai_xe();
-                    co2 = false;
+                    co_bai2 = false;
                 }
                 cout << "Da xoa bai " << ma << "\n";
             }
-            else if (co3 && bai3.lay_ma() == ma)
+            else if (co_bai3 && bai3.lay_ma() == ma)
             {
                 bai3 = bai_xe();
-                co3 = false;
+                co_bai3 = false;
                 cout << "Da xoa bai " << ma << "\n";
             }
             break;
@@ -403,22 +418,22 @@ void SystemInterface::runMenu()
             cout << "Ma xe can lay ra: ";
             cin >> ma;
             bool ok = false;
-            if (co1 && !ok)
+            if (co_bai1 && !ok)
                 ok = bai1.xoa(ma);
-            if (co2 && !ok)
+            if (co_bai2 && !ok)
                 ok = bai2.xoa(ma);
-            if (co3 && !ok)
+            if (co_bai3 && !ok)
                 ok = bai3.xoa(ma);
             cout << (ok ? "Da lay xe ra\n" : "Khong tim thay xe\n");
             break;
         }
         case (5):
         {
-            if (co1)
+            if (co_bai1)
                 bai1.hien_thi();
-            if (co2)
+            if (co_bai2)
                 bai2.hien_thi();
-            if (co3)
+            if (co_bai3)
                 bai3.hien_thi();
             break;
         }
@@ -427,11 +442,11 @@ void SystemInterface::runMenu()
             int ma;
             cout << "Ma bai: ";
             cin >> ma;
-            if (co1 && bai1.lay_ma() == ma)
+            if (co_bai1 && bai1.lay_ma() == ma)
                 bai1.hien_thi();
-            else if (co2 && bai2.lay_ma() == ma)
+            else if (co_bai2 && bai2.lay_ma() == ma)
                 bai2.hien_thi();
-            else if (co3 && bai3.lay_ma() == ma)
+            else if (co_bai3 && bai3.lay_ma() == ma)
                 bai3.hien_thi();
             break;
         }
@@ -442,12 +457,12 @@ void SystemInterface::runMenu()
             cin >> loai;
             int dem;
             double tong;
-            if (co1 && bai1.co_loai(loai, dem, tong))
-                bai1.hien_thi();
-            if (co2 && bai2.co_loai(loai, dem, tong))
-                bai2.hien_thi();
-            if (co3 && bai3.co_loai(loai, dem, tong))
-                bai3.hien_thi();
+            if (co_bai1 && bai1.co_loai(loai, dem, tong))
+                bai1.hien_thi_loai(loai);
+            if (co_bai2 && bai2.co_loai(loai, dem, tong))
+                bai2.hien_thi_loai(loai);
+            if (co_bai3 && bai3.co_loai(loai, dem, tong))
+                bai3.hien_thi_loai(loai);
             break;
         }
         case (8):
@@ -459,19 +474,19 @@ void SystemInterface::runMenu()
                 double tong = 0;
                 int d;
                 double s;
-                if (co1)
+                if (co_bai1)
                 {
                     bai1.co_loai(loai_arr[t], d, s);
                     dem += d;
                     tong += s;
                 }
-                if (co2)
+                if (co_bai2)
                 {
                     bai2.co_loai(loai_arr[t], d, s);
                     dem += d;
                     tong += s;
                 }
-                if (co3)
+                if (co_bai3)
                 {
                     bai3.co_loai(loai_arr[t], d, s);
                     dem += d;
