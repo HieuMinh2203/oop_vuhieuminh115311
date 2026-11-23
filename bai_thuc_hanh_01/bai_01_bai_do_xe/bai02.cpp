@@ -176,15 +176,11 @@ SystemInterface::SystemInterface() : so_luong_bai(0) {}
 
 int SystemInterface::tao_ma() {
     int ma_moi;
-    do 
-    {
-        
-    }
 }
 bool SystemInterface::trung_bai(int ma_bai) const {
     for (int i = 0; i < so_luong_bai; i++) {
-        if (ds_bai[i].lay_ma() == ma_bai ) return true;
-     
+        if (ds_bai[i].lay_ma() == ma_bai ) 
+        return true;
     }
     return false;
 }
@@ -223,11 +219,9 @@ void SystemInterface::runMenu()
                 cout << "Da tao toi da " << bai_max << " bai xe\n";
                 break;
             }
-           
-                cout << "Ma bai: ";
-                cin >> ma;
+            cout << "Ma bai: ";
+            cin >> ma;
                 
-            
             cout << "Kich thuoc (S/M/L): ";
             cin >> kt;
             kt = toupper(kt);
@@ -242,46 +236,38 @@ void SystemInterface::runMenu()
                 cout << "Kich thuoc khong ton tai" << endl;
                 break;
             }
-            if (!co_bai1)
-            {
-                bai1 = bai_xe(ma, kt);
-                co_bai1 = true;
-                cout << "Da tao bai " << ma << "\n";
+            if (!trung_bai(ma)) {
+                ds_bai[so_luong_bai] = bai_xe(ma,kt);
+                so_luong_bai++;
+                cout << "Da tao bai " << ma << endl;
             }
-            else if (!co_bai2)
-            {
-                bai2 = bai_xe(ma, kt);
-                co_bai2 = true;
-                cout << "Da tao bai " << ma << "\n";
-            }
-            else if (!co_bai3)
-            {
-                bai3 = bai_xe(ma, kt);
-                co_bai3 = true;
-                cout << "Da tao bai " << ma << "\n";
-            }
-            else
-            {
-                cout << "chi duoc tao toi da 3 bai xe\n";
+            else {
+                cout << "Bai da ton tai" << endl;
+                break;
             }
             break;
         }
         case (2):
         {
-            if (co_bai1 == false && co_bai2 == false && co_bai3 == false)
+            if (so_luong_bai == 0)
             {
                 cout << "chua co bai do xe nao" << endl;
                 break;
             }
+            if (so_luong_bai == 10) {
+                cout << "Bai xe da day" << endl;
+                break;
+            }
             int ma, gio, tg;
             string loai;
+            
             do
             {
                 cout << "Ma xe: ";
                 cin >> ma;
                 if (ma > 0)
                 {
-                    if ((co_bai1 && bai1.chua(ma)) || (co_bai2 && bai2.chua(ma)) || (co_bai3 && bai3.chua(ma)))
+                    if (trung_xe(ma))
                     {
                         cout << "Ma xe nay da ton tai" << endl;
                     }
@@ -290,7 +276,7 @@ void SystemInterface::runMenu()
                 {
                     cout << "ma xe phai lon hon 0" << endl;
                 }
-            } while (ma <= 0 || ((co_bai1 && bai1.chua(ma)) == true || (co_bai2 && bai2.chua(ma)) == true || (co_bai3 && bai3.chua(ma)) == true));
+            } while (ma <= 0 || (trung_xe(ma)));
             do
             {
                 cout << "Loai (Car/Motorcycle/Bicycle): ";
@@ -319,17 +305,7 @@ void SystemInterface::runMenu()
                 }
             } while (tg < 1 || tg > 23);
             phuong_tien v(ma, loai, gio, tg);
-            bool ok = false;
-            if (co_bai1 && !ok)
-                ok = bai1.them(v);
-            if (co_bai2 && !ok)
-                ok = bai2.them(v);
-            if (co_bai3 && !ok)
-                ok = bai3.them(v);
-            if (ok)
-                cout << "Da them xe " << ma << " | Phi: $" << fixed << setprecision(2) << v.tinh_phi() << "\n";
-            else
-                cout << "Tat ca bai da day!\n";
+            
             break;
         }
         case (3):
@@ -411,12 +387,9 @@ void SystemInterface::runMenu()
         }
         case (5):
         {
-            if (co_bai1)
-                bai1.hien_thi();
-            if (co_bai2)
-                bai2.hien_thi();
-            if (co_bai3)
-                bai3.hien_thi();
+            for (int i = 0; i < so_luong_bai; i++) {
+                ds_bai[i].hien_thi();
+            }
             break;
         }
         case (6):
